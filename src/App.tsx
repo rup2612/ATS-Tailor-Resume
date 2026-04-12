@@ -17,11 +17,15 @@ export default function App() {
   const [tailoredResume, setTailoredResume] = React.useState<ResumeData | null>(null);
 
   const handleTailor = async (jd: string, resume: string) => {
-    const apiKey = process.env.GEMINI_API_KEY || (import.meta as any).env?.VITE_GEMINI_API_KEY;
+    // Robust check for API key in various possible locations
+    const apiKey = 
+      (process.env.GEMINI_API_KEY) || 
+      (import.meta.env.VITE_GEMINI_API_KEY) || 
+      ((import.meta as any).env?.GEMINI_API_KEY);
     
-    if (!apiKey) {
-      toast.error("Missing API Key", {
-        description: "Please add GEMINI_API_KEY to your Vercel Environment Variables and REDEPLOY.",
+    if (!apiKey || apiKey === "undefined" || apiKey === "") {
+      toast.error("API Key Not Found in Build", {
+        description: "You added the variable, but you MUST click 'Redeploy' in Vercel for it to take effect.",
       });
       return;
     }

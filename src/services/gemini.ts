@@ -1,7 +1,8 @@
 import { GoogleGenAI, Type } from "@google/genai";
 
 const getApiKey = () => {
-  return process.env.GEMINI_API_KEY || (import.meta as any).env?.VITE_GEMINI_API_KEY || "";
+  const key = process.env.GEMINI_API_KEY || (import.meta as any).env?.VITE_GEMINI_API_KEY || (import.meta as any).env?.GEMINI_API_KEY || "";
+  return key === "undefined" ? "" : key;
 };
 
 const ai = new GoogleGenAI({ apiKey: getApiKey() });

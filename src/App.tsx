@@ -40,12 +40,23 @@ export default function App() {
         description: `ATS Score: ${data.atsScore}/10`,
       });
     } catch (error: any) {
-      console.error("Tailoring Error:", error);
-      const message = error?.message?.includes("API key") 
-        ? "Invalid or missing API Key. Check your settings." 
-        : "Failed to tailor resume. Please try again.";
+      console.error("Tailoring Error Details:", error);
       
-      toast.error(message);
+      let message = "Failed to tailor resume. Please try again.";
+      let description = "An unexpected error occurred.";
+
+      if (error?.message?.includes("API key")) {
+        message = "Invalid or missing API Key";
+        description = "Check your Vercel environment variables and REDEPLOY.";
+      } else if (error?.message?.includes("quota") || error?.message?.includes("429")) {
+        message = "Rate Limit Exceeded";
+        description = "The free tier limit was reached. Please try again later.";
+      } else if (error?.message?.includes("model")) {
+        message = "Model Error";
+        description = "The AI model is currently unavailable.";
+      }
+      
+      toast.error(message, { description });
     } finally {
       setIsLoading(false);
     }

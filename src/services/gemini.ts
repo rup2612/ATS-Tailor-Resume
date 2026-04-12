@@ -1,10 +1,32 @@
 import { GoogleGenAI, Type } from "@google/genai";
 
 const getApiKey = () => {
-  let key = process.env.GEMINI_API_KEY || (import.meta as any).env?.VITE_GEMINI_API_KEY || (import.meta as any).env?.GEMINI_API_KEY || "";
-  if (key === "undefined") return "";
-  // Strip quotes if they were accidentally included in the env variable
-  return key.replace(/^["']|["']$/g, "").trim();
+  let key = "";
+  try {
+    key = process.env.GEMINI_API_KEY || "";
+  } catch (e) {}
+  
+  if (!key || key === "undefined") {
+    try {
+      key = (import.meta as any).env?.VITE_GEMINI_API_KEY || "";
+    } catch (e) {}
+  }
+
+  if (!key || key === "undefined") {
+    try {
+      key = (import.meta as any).env?.GEMINI_API_KEY || "";
+    } catch (e) {}
+  }
+
+  const finalKey = key.replace(/^["']|["']$/g, "").trim();
+  
+  if (finalKey && finalKey !== "undefined") {
+    console.log(`[Gemini] API Key detected (starts with: ${finalKey.substring(0, 4)}...)`);
+    return finalKey;
+  }
+  
+  console.warn("[Gemini] No API Key detected in build!");
+  return "";
 };
 
 const ai = new GoogleGenAI({ apiKey: getApiKey() });

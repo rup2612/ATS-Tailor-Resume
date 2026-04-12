@@ -6,6 +6,8 @@ import { Separator } from "@/components/ui/separator";
 import { Mail, Phone, Linkedin, Github, MapPin, ExternalLink, Download, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "motion/react";
+import { exportToDocx } from "@/src/lib/export";
+import { FileText } from "lucide-react";
 
 interface ResumePreviewProps {
   data: ResumeData;
@@ -14,6 +16,14 @@ interface ResumePreviewProps {
 
 export function ResumePreview({ data, onBack }: ResumePreviewProps) {
   const { personalInfo, summary, skills, workExperience, education, projects, atsScore, tailoringFeedback } = data;
+
+  const handleDownloadDocx = async () => {
+    try {
+      await exportToDocx(data);
+    } catch (error) {
+      console.error("Error exporting to DOCX:", error);
+    }
+  };
 
   return (
     <div className="w-full max-w-5xl mx-auto space-y-8 pb-20">
@@ -30,10 +40,16 @@ export function ResumePreview({ data, onBack }: ResumePreviewProps) {
               <span className="text-slate-400 font-medium">/10</span>
             </div>
           </div>
-          <Button className="bg-slate-900 text-white rounded-full px-6">
-            <Download className="mr-2 h-4 w-4" />
-            Download PDF
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={handleDownloadDocx} className="rounded-full px-6 border-slate-200">
+              <FileText className="mr-2 h-4 w-4" />
+              Word (.docx)
+            </Button>
+            <Button className="bg-slate-900 text-white rounded-full px-6">
+              <Download className="mr-2 h-4 w-4" />
+              PDF
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -42,7 +58,7 @@ export function ResumePreview({ data, onBack }: ResumePreviewProps) {
         animate={{ opacity: 1, y: 0 }}
         className="grid grid-cols-1 lg:grid-cols-3 gap-8"
       >
-        {/* Left Sidebar: Feedback & Skills */}
+        {/* Left Sidebar: Feedback */}
         <div className="lg:col-span-1 space-y-6">
           <Card className="border-none shadow-md bg-slate-50">
             <CardContent className="p-6 space-y-4">
@@ -50,19 +66,6 @@ export function ResumePreview({ data, onBack }: ResumePreviewProps) {
               <p className="text-sm text-slate-600 leading-relaxed">
                 {tailoringFeedback}
               </p>
-            </CardContent>
-          </Card>
-
-          <Card className="border-none shadow-md bg-white">
-            <CardContent className="p-6 space-y-4">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900">Key Skills</h3>
-              <div className="flex flex-wrap gap-2">
-                {skills.map((skill, i) => (
-                  <Badge key={i} variant="secondary" className="bg-slate-100 text-slate-700 hover:bg-slate-200 border-none px-3 py-1">
-                    {skill}
-                  </Badge>
-                ))}
-              </div>
             </CardContent>
           </Card>
         </div>
@@ -97,6 +100,18 @@ export function ResumePreview({ data, onBack }: ResumePreviewProps) {
               <p className="text-slate-700 leading-relaxed text-[15px]">
                 {summary}
               </p>
+            </section>
+
+            {/* Skills */}
+            <section className="space-y-3">
+              <h2 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">Skills</h2>
+              <div className="flex flex-wrap gap-2">
+                {skills.map((skill, i) => (
+                  <span key={i} className="text-slate-700 text-[14px] font-medium">
+                    {skill}{i < skills.length - 1 ? " • " : ""}
+                  </span>
+                ))}
+              </div>
             </section>
 
             {/* Experience */}

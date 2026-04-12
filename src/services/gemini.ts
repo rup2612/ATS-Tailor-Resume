@@ -49,10 +49,11 @@ export async function tailorResume(jobDescription: string, oldResume: string): P
             
             REQUIREMENTS:
             1. ATS FRIENDLY: Use keywords from the JD naturally.
-            2. STRUCTURE: Header (Name, Contact, Links), Summary, Skills, Work Experience, Education, and Projects (if applicable).
-            3. RATING: Provide an ATS compatibility score out of 10.
-            4. FEEDBACK: Briefly explain what was changed to make it a better match.
-            5. FORMAT: Return the response in strict JSON format.
+            2. STRUCTURE: Header (Name, Contact, Links), Summary, Skills, Work Experience, Education.
+            3. PROJECTS: ONLY include a projects section if the user has explicitly listed projects in their OLD RESUME. DO NOT hallucinate or create fake projects.
+            4. RATING: Provide an ATS compatibility score out of 10.
+            5. FEEDBACK: Briefly explain what was changed to make it a better match.
+            6. FORMAT: Return the response in strict JSON format.
             
             JOB DESCRIPTION:
             ${jobDescription}

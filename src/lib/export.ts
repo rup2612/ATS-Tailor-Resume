@@ -144,6 +144,42 @@ export async function exportToDocx(data: ResumeData) {
                 ]),
               ]
             : []),
+
+          // Certifications
+          ...(data.certifications && data.certifications.length > 0
+            ? [
+                new Paragraph({
+                  heading: HeadingLevel.HEADING_2,
+                  spacing: { before: 300 },
+                  children: [new TextRun({ text: "CERTIFICATIONS", bold: true, size: 24 })],
+                  border: { bottom: { color: "auto", space: 1, style: BorderStyle.SINGLE, size: 6 } },
+                }),
+                ...data.certifications.map(
+                  (cert) =>
+                    new Paragraph({
+                      text: cert,
+                      bullet: { level: 0 },
+                      spacing: { before: 50 },
+                    })
+                ),
+              ]
+            : []),
+
+          // Languages
+          ...(data.languages && data.languages.length > 0
+            ? [
+                new Paragraph({
+                  heading: HeadingLevel.HEADING_2,
+                  spacing: { before: 300 },
+                  children: [new TextRun({ text: "LANGUAGES", bold: true, size: 24 })],
+                  border: { bottom: { color: "auto", space: 1, style: BorderStyle.SINGLE, size: 6 } },
+                }),
+                new Paragraph({
+                  spacing: { before: 100 },
+                  children: [new TextRun({ text: data.languages.join(" • "), size: 22 })],
+                }),
+              ]
+            : []),
         ],
       },
     ],

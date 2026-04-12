@@ -30,6 +30,8 @@ export interface ResumeData {
     description: string;
     link?: string;
   }[];
+  certifications?: string[];
+  languages?: string[];
   atsScore: number;
   tailoringFeedback: string;
 }
@@ -49,11 +51,12 @@ export async function tailorResume(jobDescription: string, oldResume: string): P
             
             REQUIREMENTS:
             1. ATS FRIENDLY: Use keywords from the JD naturally.
-            2. STRUCTURE: Header (Name, Contact, Links), Summary, Skills, Work Experience, Education.
-            3. PROJECTS: ONLY include a projects section if the user has explicitly listed projects in their OLD RESUME. DO NOT hallucinate or create fake projects.
-            4. RATING: Provide an ATS compatibility score out of 10.
-            5. FEEDBACK: Briefly explain what was changed to make it a better match.
-            6. FORMAT: Return the response in strict JSON format.
+            2. PRESERVE ALL DATA: DO NOT remove any sections or information provided in the OLD RESUME. If the user has certifications, languages, awards, or any other section, you MUST include it in the tailored version.
+            3. STRUCTURE: Header (Name, Contact, Links), Summary, Skills, Work Experience, Education, Projects (if present), Certifications (if present), Languages (if present).
+            4. PROJECTS: ONLY include a projects section if the user has explicitly listed projects in their OLD RESUME.
+            5. RATING: Provide an ATS compatibility score out of 10.
+            6. FEEDBACK: Briefly explain what was changed to make it a better match.
+            7. FORMAT: Return the response in strict JSON format.
             
             JOB DESCRIPTION:
             ${jobDescription}
@@ -127,6 +130,14 @@ export async function tailorResume(jobDescription: string, oldResume: string): P
               },
               required: ["name", "description"]
             }
+          },
+          certifications: {
+            type: Type.ARRAY,
+            items: { type: Type.STRING }
+          },
+          languages: {
+            type: Type.ARRAY,
+            items: { type: Type.STRING }
           },
           atsScore: { type: Type.NUMBER },
           tailoringFeedback: { type: Type.STRING }

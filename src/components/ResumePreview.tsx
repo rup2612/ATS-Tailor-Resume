@@ -186,6 +186,34 @@ export function ResumePreview({ data, onBack }: ResumePreviewProps) {
                 </div>
               </section>
             )}
+
+            {/* Certifications */}
+            {data.certifications && data.certifications.length > 0 && (
+              <section className="space-y-3">
+                <h2 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">Certifications</h2>
+                <ul className="list-disc list-outside ml-4 space-y-1">
+                  {data.certifications.map((cert, i) => (
+                    <li key={i} className="text-slate-700 text-[14px]">
+                      {cert}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
+            {/* Languages */}
+            {data.languages && data.languages.length > 0 && (
+              <section className="space-y-3">
+                <h2 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">Languages</h2>
+                <div className="flex flex-wrap gap-2">
+                  {data.languages.map((lang, i) => (
+                    <span key={i} className="text-slate-700 text-[14px] font-medium">
+                      {lang}{i < data.languages.length - 1 ? " • " : ""}
+                    </span>
+                  ))}
+                </div>
+              </section>
+            )}
           </CardContent>
         </Card>
       </motion.div>

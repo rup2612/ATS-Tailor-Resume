@@ -18,10 +18,12 @@ export default function App() {
 
   const handleTailor = async (jd: string, resume: string) => {
     // Robust check for API key in various possible locations
-    const apiKey = 
+    const rawKey = 
       (process.env.GEMINI_API_KEY) || 
-      (import.meta.env.VITE_GEMINI_API_KEY) || 
-      ((import.meta as any).env?.GEMINI_API_KEY);
+      ((import.meta as any).env?.VITE_GEMINI_API_KEY) || 
+      ((import.meta as any).env?.GEMINI_API_KEY) || "";
+    
+    const apiKey = rawKey.replace(/^["']|["']$/g, "").trim();
     
     if (!apiKey || apiKey === "undefined" || apiKey === "") {
       toast.error("API Key Not Found in Build", {

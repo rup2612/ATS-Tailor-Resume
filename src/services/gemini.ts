@@ -66,119 +66,126 @@ export interface ResumeData {
 }
 
 export async function tailorResume(jobDescription: string, oldResume: string): Promise<ResumeData> {
-  const response = await ai.models.generateContent({
-    model: "gemini-1.5-flash",
-    contents: [
-      {
-        role: "user",
-        parts: [
-          {
-            text: `You are an expert ATS (Applicant Tracking System) optimization specialist and professional resume writer.
-            
-            TASK:
-            Tailor the provided resume to match the given job description (JD).
-            
-            REQUIREMENTS:
-            1. ATS FRIENDLY: Use keywords from the JD naturally.
-            2. PRESERVE ALL DATA: DO NOT remove any sections or information provided in the OLD RESUME. If the user has certifications, languages, awards, or any other section, you MUST include it in the tailored version.
-            3. STRUCTURE: Header (Name, Contact, Links), Summary, Skills, Work Experience, Education, Projects (if present), Certifications (if present), Languages (if present).
-            4. PROJECTS: ONLY include a projects section if the user has explicitly listed projects in their OLD RESUME.
-            5. RATING: Provide an ATS compatibility score out of 10.
-            6. FEEDBACK: Briefly explain what was changed to make it a better match.
-            7. FORMAT: Return the response in strict JSON format.
-            
-            JOB DESCRIPTION:
-            ${jobDescription}
-            
-            OLD RESUME:
-            ${oldResume}
-            `
-          }
-        ]
-      }
-    ],
-    config: {
-      responseMimeType: "application/json",
-      responseSchema: {
-        type: Type.OBJECT,
-        properties: {
-          personalInfo: {
-            type: Type.OBJECT,
-            properties: {
-              name: { type: Type.STRING },
-              email: { type: Type.STRING },
-              phone: { type: Type.STRING },
-              linkedin: { type: Type.STRING },
-              github: { type: Type.STRING },
-            },
-            required: ["name", "email", "phone", "linkedin", "github"]
-          },
-          summary: { type: Type.STRING },
-          skills: {
-            type: Type.ARRAY,
-            items: { type: Type.STRING }
-          },
-          workExperience: {
-            type: Type.ARRAY,
-            items: {
-              type: Type.OBJECT,
-              properties: {
-                company: { type: Type.STRING },
-                role: { type: Type.STRING },
-                location: { type: Type.STRING },
-                period: { type: Type.STRING },
-                description: {
-                  type: Type.ARRAY,
-                  items: { type: Type.STRING }
-                }
-              },
-              required: ["company", "role", "location", "period", "description"]
+  try {
+    const response = await ai.models.generateContent({
+      model: "gemini-3-flash-preview",
+      contents: [
+        {
+          role: "user",
+          parts: [
+            {
+              text: `You are an expert ATS (Applicant Tracking System) optimization specialist and professional resume writer.
+              
+              TASK:
+              Tailor the provided resume to match the given job description (JD).
+              
+              REQUIREMENTS:
+              1. ATS FRIENDLY: Use keywords from the JD naturally.
+              2. PRESERVE ALL DATA: DO NOT remove any sections or information provided in the OLD RESUME. If the user has certifications, languages, awards, or any other section, you MUST include it in the tailored version.
+              3. STRUCTURE: Header (Name, Contact, Links), Summary, Skills, Work Experience, Education, Projects (if present), Certifications (if present), Languages (if present).
+              4. PROJECTS: ONLY include a projects section if the user has explicitly listed projects in their OLD RESUME.
+              5. RATING: Provide an ATS compatibility score out of 10.
+              6. FEEDBACK: Briefly explain what was changed to make it a better match.
+              7. FORMAT: Return the response in strict JSON format.
+              
+              JOB DESCRIPTION:
+              ${jobDescription}
+              
+              OLD RESUME:
+              ${oldResume}
+              `
             }
-          },
-          education: {
-            type: Type.ARRAY,
-            items: {
-              type: Type.OBJECT,
-              properties: {
-                school: { type: Type.STRING },
-                degree: { type: Type.STRING },
-                location: { type: Type.STRING },
-                period: { type: Type.STRING }
-              },
-              required: ["school", "degree", "location", "period"]
-            }
-          },
-          projects: {
-            type: Type.ARRAY,
-            items: {
+          ]
+        }
+      ],
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: Type.OBJECT,
+          properties: {
+            personalInfo: {
               type: Type.OBJECT,
               properties: {
                 name: { type: Type.STRING },
-                description: { type: Type.STRING },
-                link: { type: Type.STRING }
+                email: { type: Type.STRING },
+                phone: { type: Type.STRING },
+                linkedin: { type: Type.STRING },
+                github: { type: Type.STRING },
               },
-              required: ["name", "description"]
-            }
+              required: ["name", "email", "phone", "linkedin", "github"]
+            },
+            summary: { type: Type.STRING },
+            skills: {
+              type: Type.ARRAY,
+              items: { type: Type.STRING }
+            },
+            workExperience: {
+              type: Type.ARRAY,
+              items: {
+                type: Type.OBJECT,
+                properties: {
+                  company: { type: Type.STRING },
+                  role: { type: Type.STRING },
+                  location: { type: Type.STRING },
+                  period: { type: Type.STRING },
+                  description: {
+                    type: Type.ARRAY,
+                    items: { type: Type.STRING }
+                  }
+                },
+                required: ["company", "role", "location", "period", "description"]
+              }
+            },
+            education: {
+              type: Type.ARRAY,
+              items: {
+                type: Type.OBJECT,
+                properties: {
+                  school: { type: Type.STRING },
+                  degree: { type: Type.STRING },
+                  location: { type: Type.STRING },
+                  period: { type: Type.STRING }
+                },
+                required: ["school", "degree", "location", "period"]
+              }
+            },
+            projects: {
+              type: Type.ARRAY,
+              items: {
+                type: Type.OBJECT,
+                properties: {
+                  name: { type: Type.STRING },
+                  description: { type: Type.STRING },
+                  link: { type: Type.STRING }
+                },
+                required: ["name", "description"]
+              }
+            },
+            certifications: {
+              type: Type.ARRAY,
+              items: { type: Type.STRING }
+            },
+            languages: {
+              type: Type.ARRAY,
+              items: { type: Type.STRING }
+            },
+            atsScore: { type: Type.NUMBER },
+            tailoringFeedback: { type: Type.STRING }
           },
-          certifications: {
-            type: Type.ARRAY,
-            items: { type: Type.STRING }
-          },
-          languages: {
-            type: Type.ARRAY,
-            items: { type: Type.STRING }
-          },
-          atsScore: { type: Type.NUMBER },
-          tailoringFeedback: { type: Type.STRING }
-        },
-        required: ["personalInfo", "summary", "skills", "workExperience", "education", "atsScore", "tailoringFeedback"]
+          required: ["personalInfo", "summary", "skills", "workExperience", "education", "atsScore", "tailoringFeedback"]
+        }
       }
+    });
+
+    if (!response.text) {
+      throw new Error("Failed to generate tailored resume: Empty response from AI");
     }
-  });
 
-  if (!response.text) {
-    throw new Error("Failed to generate tailored resume");
+    return JSON.parse(response.text);
+  } catch (error: any) {
+    console.error("[Gemini Service Error]:", error);
+    // Re-throw with a more descriptive message if possible
+    const errorMessage = error?.message || String(error);
+    throw new Error(`AI Tailoring failed: ${errorMessage}`);
   }
-
-  return JSON.parse(response.text);
 }

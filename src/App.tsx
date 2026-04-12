@@ -43,7 +43,7 @@ export default function App() {
       console.error("Tailoring Error Details:", error);
       
       let message = "Failed to tailor resume. Please try again.";
-      let description = "An unexpected error occurred.";
+      let description = error?.message || "An unexpected error occurred.";
 
       if (error?.message?.includes("API key")) {
         message = "Invalid or missing API Key";
@@ -53,7 +53,7 @@ export default function App() {
         description = "The free tier limit was reached. Please try again later.";
       } else if (error?.message?.includes("model")) {
         message = "Model Error";
-        description = "The AI model is currently unavailable.";
+        description = "The AI model is currently unavailable or the name is incorrect.";
       }
       
       toast.error(message, { description });

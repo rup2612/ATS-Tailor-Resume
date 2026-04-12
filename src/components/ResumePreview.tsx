@@ -10,6 +10,7 @@ import { exportToDocx } from "@/src/lib/export";
 import { FileText } from "lucide-react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { toast } from "sonner";
 
 interface ResumePreviewProps {
   data: ResumeData;
@@ -30,29 +31,54 @@ export function ResumePreview({ data, onBack }: ResumePreviewProps) {
   };
 
   const handleDownloadPdf = async () => {
-    if (!resumeRef.current) return;
+    if (!resumeRef.current) {
+      toast.error("Resume content not found");
+      return;
+    }
     
     setIsExportingPdf(true);
     try {
+      // Small delay to ensure any animations are settled
+      await new Promise(resolve => setTimeout(resolve, 300));
+
       const element = resumeRef.current;
       const canvas = await html2canvas(element, {
-        scale: 2,
+        scale: 2, // High quality
         useCORS: true,
+        allowTaint: false,
         logging: false,
-        backgroundColor: "#ffffff"
+        backgroundColor: "#ffffff",
+        scrollX: 0,
+        scrollY: -window.scrollY, // Fix for scrolled pages
+        onclone: (clonedDoc) => {
+          // You can modify the cloned element here if needed
+          const clonedElement = clonedDoc.querySelector('[ref="resumeRef"]') as HTMLElement;
+          if (clonedElement) {
+            clonedElement.style.boxShadow = 'none'; // Remove shadow for cleaner PDF
+          }
+        }
       });
       
-      const imgData = canvas.toDataURL("image/png");
+      const imgData = canvas.toDataURL("image/jpeg", 0.95);
       const pdf = new jsPDF({
         orientation: "portrait",
-        unit: "px",
-        format: [canvas.width, canvas.height]
+        unit: "mm",
+        format: "a4"
       });
       
-      pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      
+      pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
       pdf.save(`${personalInfo.name.replace(/\s+/g, "_")}_Resume.pdf`);
-    } catch (error) {
+      
+      toast.success("PDF downloaded successfully!");
+    } catch (error: any) {
       console.error("Error exporting to PDF:", error);
+      toast.error("Failed to generate PDF", {
+        description: "Please try the Word (.docx) option instead."
+      });
     } finally {
       setIsExportingPdf(false);
     }

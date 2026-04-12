@@ -17,6 +17,13 @@ export default function App() {
   const [tailoredResume, setTailoredResume] = React.useState<ResumeData | null>(null);
 
   const handleTailor = async (jd: string, resume: string) => {
+    if (!process.env.GEMINI_API_KEY) {
+      toast.error("Missing API Key", {
+        description: "Please add GEMINI_API_KEY to your environment variables.",
+      });
+      return;
+    }
+
     setIsLoading(true);
     try {
       const data = await tailorResume(jd, resume);
@@ -24,9 +31,13 @@ export default function App() {
       toast.success("Resume tailored successfully!", {
         description: `ATS Score: ${data.atsScore}/10`,
       });
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to tailor resume. Please try again.");
+    } catch (error: any) {
+      console.error("Tailoring Error:", error);
+      const message = error?.message?.includes("API key") 
+        ? "Invalid or missing API Key. Check your settings." 
+        : "Failed to tailor resume. Please try again.";
+      
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }

@@ -26,31 +26,12 @@ export function ResumePreview({ data, onBack }: ResumePreviewProps) {
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto space-y-8 pb-20">
+    <div className="w-full max-w-5xl mx-auto space-y-8 pb-32">
       <div className="flex justify-between items-center px-4">
         <Button variant="ghost" onClick={onBack} className="text-slate-600 hover:text-slate-900">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Editor
         </Button>
-        <div className="flex items-center gap-4">
-          <div className="flex flex-col items-end">
-            <span className="text-xs font-bold uppercase tracking-widest text-slate-400">ATS Score</span>
-            <div className="flex items-baseline gap-1">
-              <span className="text-3xl font-black text-slate-900">{atsScore}</span>
-              <span className="text-slate-400 font-medium">/10</span>
-            </div>
-          </div>
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={handleDownloadDocx} className="rounded-full px-6 border-slate-200">
-              <FileText className="mr-2 h-4 w-4" />
-              Word (.docx)
-            </Button>
-            <Button className="bg-slate-900 text-white rounded-full px-6">
-              <Download className="mr-2 h-4 w-4" />
-              PDF
-            </Button>
-          </div>
-        </div>
       </div>
 
       <motion.div 
@@ -217,6 +198,37 @@ export function ResumePreview({ data, onBack }: ResumePreviewProps) {
           </CardContent>
         </Card>
       </motion.div>
+
+      {/* Sticky Footer for Actions */}
+      <div className="fixed bottom-8 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
+        <motion.div 
+          initial={{ y: 100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.5, type: "spring", stiffness: 260, damping: 20 }}
+          className="bg-white/90 backdrop-blur-xl border border-slate-200 shadow-2xl rounded-full px-8 py-3 flex items-center gap-8 pointer-events-auto"
+        >
+          <div className="flex items-center gap-3 pr-8 border-r border-slate-100">
+            <div className="flex flex-col">
+              <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">ATS Compatibility</span>
+              <div className="flex items-baseline gap-1">
+                <span className="text-2xl font-black text-slate-900">{atsScore}</span>
+                <span className="text-slate-400 text-xs font-bold">/10</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex gap-3">
+            <Button variant="outline" onClick={handleDownloadDocx} className="rounded-full px-6 border-slate-200 h-11 font-bold text-slate-600 hover:text-slate-900">
+              <FileText className="mr-2 h-4 w-4" />
+              Word (.docx)
+            </Button>
+            <Button className="bg-slate-900 text-white rounded-full px-8 h-11 font-bold shadow-lg shadow-slate-200 hover:bg-slate-800 transition-all">
+              <Download className="mr-2 h-4 w-4" />
+              Download PDF
+            </Button>
+          </div>
+        </motion.div>
+      </div>
     </div>
   );
 }

@@ -33,14 +33,16 @@ export default function App() {
     }
 
     setIsLoading(true);
+    console.log("[App] Starting resume tailoring...");
     try {
       const data = await tailorResume(jd, resume);
+      console.log("[App] Tailoring successful:", data);
       setTailoredResume(data);
       toast.success("Resume tailored successfully!", {
         description: `ATS Score: ${data.atsScore}/10`,
       });
     } catch (error: any) {
-      console.error("Tailoring Error Details:", error);
+      console.error("[App] Tailoring Error Details:", error);
       
       let message = "Failed to tailor resume. Please try again.";
       let description = error?.message || "An unexpected error occurred.";

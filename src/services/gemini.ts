@@ -68,36 +68,31 @@ export interface ResumeData {
 export async function tailorResume(jobDescription: string, oldResume: string): Promise<ResumeData> {
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
-      contents: [
-        {
-          role: "user",
-          parts: [
-            {
-              text: `You are an expert ATS (Applicant Tracking System) optimization specialist and professional resume writer.
-              
-              TASK:
-              Tailor the provided resume to match the given job description (JD).
-              
-              REQUIREMENTS:
-              1. ATS FRIENDLY: Use keywords from the JD naturally.
-              2. PRESERVE ALL DATA: DO NOT remove any sections or information provided in the OLD RESUME. If the user has certifications, languages, awards, or any other section, you MUST include it in the tailored version.
-              3. STRUCTURE: Header (Name, Contact, Links), Summary, Skills, Work Experience, Education, Projects (if present), Certifications (if present), Languages (if present).
-              4. PROJECTS: ONLY include a projects section if the user has explicitly listed projects in their OLD RESUME.
-              5. RATING: Provide an ATS compatibility score out of 10.
-              6. FEEDBACK: Briefly explain what was changed to make it a better match.
-              7. FORMAT: Return the response in strict JSON format.
-              
-              JOB DESCRIPTION:
-              ${jobDescription}
-              
-              OLD RESUME:
-              ${oldResume}
-              `
-            }
-          ]
-        }
-      ],
+      model: "gemini-flash-latest",
+      contents: [{
+        parts: [{
+          text: `You are an expert ATS (Applicant Tracking System) optimization specialist and professional resume writer.
+          
+          TASK:
+          Tailor the provided resume to match the given job description (JD).
+          
+          REQUIREMENTS:
+          1. ATS FRIENDLY: Use keywords from the JD naturally.
+          2. PRESERVE ALL DATA: DO NOT remove any sections or information provided in the OLD RESUME. If the user has certifications, languages, awards, or any other section, you MUST include it in the tailored version.
+          3. STRUCTURE: Header (Name, Contact, Links), Summary, Skills, Work Experience, Education, Projects (if present), Certifications (if present), Languages (if present).
+          4. PROJECTS: ONLY include a projects section if the user has explicitly listed projects in their OLD RESUME.
+          5. RATING: Provide an ATS compatibility score out of 10.
+          6. FEEDBACK: Briefly explain what was changed to make it a better match.
+          7. FORMAT: Return the response in strict JSON format.
+          
+          JOB DESCRIPTION:
+          ${jobDescription}
+          
+          OLD RESUME:
+          ${oldResume}
+          `
+        }]
+      }],
       config: {
         responseMimeType: "application/json",
         responseSchema: {
@@ -184,7 +179,6 @@ export async function tailorResume(jobDescription: string, oldResume: string): P
     return JSON.parse(response.text);
   } catch (error: any) {
     console.error("[Gemini Service Error]:", error);
-    // Re-throw with a more descriptive message if possible
     const errorMessage = error?.message || String(error);
     throw new Error(`AI Tailoring failed: ${errorMessage}`);
   }

@@ -51,8 +51,8 @@ export default function App() {
         message = "Invalid or missing API Key";
         description = "Check your Vercel environment variables and REDEPLOY.";
       } else if (error?.message?.includes("quota") || error?.message?.includes("429")) {
-        message = "Rate Limit Exceeded";
-        description = "The free tier limit was reached. Please try again later.";
+        message = "Gemini API Limit Reached";
+        description = "The Google Gemini free tier limit was reached. It usually resets every minute (for RPM) or every 24 hours (for daily limits).";
       } else if (error?.message?.includes("model")) {
         message = "Model Error";
         description = "The AI model is currently unavailable or the name is incorrect.";

@@ -8,8 +8,9 @@ import { toast } from "sonner";
 import * as mammoth from "mammoth";
 import * as pdfjs from "pdfjs-dist";
 
-// Set up PDF.js worker
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+// Set up PDF.js worker - using a more reliable CDN link
+const PDFJS_VERSION = '4.0.379';
+pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${PDFJS_VERSION}/pdf.worker.min.mjs`;
 
 interface ResumeFormProps {
   onSubmit: (jd: string, resume: string) => void;
@@ -35,7 +36,14 @@ export function ResumeForm({ onSubmit, isLoading }: ResumeFormProps) {
 
     const fileType = file.name.split('.').pop()?.toLowerCase();
     
-    if (!['pdf', 'docx', 'doc'].includes(fileType || '')) {
+    if (fileType === 'doc') {
+      toast.error("Old .doc format not supported", {
+        description: "Please convert your file to .docx or .pdf first."
+      });
+      return;
+    }
+
+    if (!['pdf', 'docx'].includes(fileType || '')) {
       toast.error("Unsupported file format", {
         description: "Please upload a .pdf or .docx file."
       });
@@ -45,48 +53,72 @@ export function ResumeForm({ onSubmit, isLoading }: ResumeFormProps) {
     setIsParsing(true);
     const reader = new FileReader();
 
+    reader.onerror = () => {
+      toast.error("Failed to read file");
+      setIsParsing(false);
+    };
+
     try {
       if (fileType === 'docx') {
         reader.onload = async (event) => {
-          const arrayBuffer = event.target?.result as ArrayBuffer;
-          const result = await mammoth.extractRawText({ arrayBuffer });
-          setResume(result.value);
-          toast.success("Resume uploaded successfully!");
-          setIsParsing(false);
+          try {
+            const arrayBuffer = event.target?.result as ArrayBuffer;
+            const result = await mammoth.extractRawText({ arrayBuffer });
+            setResume(result.value);
+            toast.success("Resume uploaded successfully!");
+          } catch (error) {
+            console.error("Docx parsing error:", error);
+            toast.error("Failed to parse Word document");
+          } finally {
+            setIsParsing(false);
+          }
         };
         reader.readAsArrayBuffer(file);
       } else if (fileType === 'pdf') {
         reader.onload = async (event) => {
-          const arrayBuffer = event.target?.result as ArrayBuffer;
-          const loadingTask = pdfjs.getDocument({ data: arrayBuffer });
-          const pdf = await loadingTask.promise;
-          let fullText = "";
-          
-          for (let i = 1; i <= pdf.numPages; i++) {
-            const page = await pdf.getPage(i);
-            const textContent = await page.getTextContent();
-            const pageText = textContent.items
-              .map((item: any) => item.str)
-              .join(" ");
-            fullText += pageText + "\n";
+          try {
+            const arrayBuffer = event.target?.result as ArrayBuffer;
+            
+            // Initialize PDF.js
+            const loadingTask = pdfjs.getDocument({ 
+              data: arrayBuffer,
+              useWorkerFetch: true,
+              isEvalSupported: false,
+            });
+            
+            const pdf = await loadingTask.promise;
+            let fullText = "";
+            
+            for (let i = 1; i <= pdf.numPages; i++) {
+              const page = await pdf.getPage(i);
+              const textContent = await page.getTextContent();
+              const pageText = textContent.items
+                .map((item: any) => item.str)
+                .join(" ");
+              fullText += pageText + "\n";
+            }
+            
+            if (fullText.trim().length === 0) {
+              throw new Error("No text found in PDF");
+            }
+
+            setResume(fullText);
+            toast.success("Resume uploaded successfully!");
+          } catch (error: any) {
+            console.error("PDF parsing error:", error);
+            toast.error("Failed to parse PDF", {
+              description: error.message || "The file might be encrypted or corrupted."
+            });
+          } finally {
+            setIsParsing(false);
           }
-          
-          setResume(fullText);
-          toast.success("Resume uploaded successfully!");
-          setIsParsing(false);
         };
         reader.readAsArrayBuffer(file);
-      } else if (fileType === 'doc') {
-        toast.error("Old .doc format not supported", {
-          description: "Please convert your file to .docx or .pdf first."
-        });
+      } else {
         setIsParsing(false);
       }
     } catch (error) {
-      console.error("Error parsing file:", error);
-      toast.error("Failed to parse file", {
-        description: "Please try copying and pasting the text instead."
-      });
+      console.error("File upload error:", error);
       setIsParsing(false);
     }
 

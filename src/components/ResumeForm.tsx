@@ -3,7 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Sparkles } from "lucide-react";
+import { Loader2, Sparkles, Upload, FileText } from "lucide-react";
+import { toast } from "sonner";
+import * as mammoth from "mammoth";
+import * as pdfjs from "pdfjs-dist";
+
+// Set up PDF.js worker
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 interface ResumeFormProps {
   onSubmit: (jd: string, resume: string) => void;
@@ -13,11 +19,80 @@ interface ResumeFormProps {
 export function ResumeForm({ onSubmit, isLoading }: ResumeFormProps) {
   const [jd, setJd] = React.useState("");
   const [resume, setResume] = React.useState("");
+  const [isParsing, setIsParsing] = React.useState(false);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (jd && resume) {
       onSubmit(jd, resume);
+    }
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const fileType = file.name.split('.').pop()?.toLowerCase();
+    
+    if (!['pdf', 'docx', 'doc'].includes(fileType || '')) {
+      toast.error("Unsupported file format", {
+        description: "Please upload a .pdf or .docx file."
+      });
+      return;
+    }
+
+    setIsParsing(true);
+    const reader = new FileReader();
+
+    try {
+      if (fileType === 'docx') {
+        reader.onload = async (event) => {
+          const arrayBuffer = event.target?.result as ArrayBuffer;
+          const result = await mammoth.extractRawText({ arrayBuffer });
+          setResume(result.value);
+          toast.success("Resume uploaded successfully!");
+          setIsParsing(false);
+        };
+        reader.readAsArrayBuffer(file);
+      } else if (fileType === 'pdf') {
+        reader.onload = async (event) => {
+          const arrayBuffer = event.target?.result as ArrayBuffer;
+          const loadingTask = pdfjs.getDocument({ data: arrayBuffer });
+          const pdf = await loadingTask.promise;
+          let fullText = "";
+          
+          for (let i = 1; i <= pdf.numPages; i++) {
+            const page = await pdf.getPage(i);
+            const textContent = await page.getTextContent();
+            const pageText = textContent.items
+              .map((item: any) => item.str)
+              .join(" ");
+            fullText += pageText + "\n";
+          }
+          
+          setResume(fullText);
+          toast.success("Resume uploaded successfully!");
+          setIsParsing(false);
+        };
+        reader.readAsArrayBuffer(file);
+      } else if (fileType === 'doc') {
+        toast.error("Old .doc format not supported", {
+          description: "Please convert your file to .docx or .pdf first."
+        });
+        setIsParsing(false);
+      }
+    } catch (error) {
+      console.error("Error parsing file:", error);
+      toast.error("Failed to parse file", {
+        description: "Please try copying and pasting the text instead."
+      });
+      setIsParsing(false);
+    }
+
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
     }
   };
 
@@ -28,7 +103,7 @@ export function ResumeForm({ onSubmit, isLoading }: ResumeFormProps) {
           Tailor Your Resume
         </CardTitle>
         <CardDescription className="text-slate-500 text-lg">
-          Paste the job description and your current resume to get started.
+          Upload your resume or paste the text to get started.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -41,20 +116,46 @@ export function ResumeForm({ onSubmit, isLoading }: ResumeFormProps) {
               <Textarea
                 id="jd"
                 placeholder="Paste the job description here..."
-                className="min-h-[300px] resize-none border-slate-200 focus:ring-2 focus:ring-slate-900 transition-all"
+                className="min-h-[350px] resize-none border-slate-200 focus:ring-2 focus:ring-slate-900 transition-all"
                 value={jd}
                 onChange={(e) => setJd(e.target.value)}
                 required
               />
             </div>
             <div className="space-y-3">
-              <Label htmlFor="resume" className="text-sm font-semibold uppercase tracking-wider text-slate-700">
-                Current Resume
-              </Label>
+              <div className="flex justify-between items-center">
+                <Label htmlFor="resume" className="text-sm font-semibold uppercase tracking-wider text-slate-700">
+                  Current Resume
+                </Label>
+                <div className="flex gap-2">
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleFileUpload}
+                    accept=".pdf,.docx"
+                    className="hidden"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    disabled={isParsing}
+                    onClick={() => fileInputRef.current?.click()}
+                    className="h-8 rounded-full border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-50"
+                  >
+                    {isParsing ? (
+                      <Loader2 className="mr-1.5 h-3 w-3 animate-spin" />
+                    ) : (
+                      <Upload className="mr-1.5 h-3 w-3" />
+                    )}
+                    {isParsing ? "Parsing..." : "Upload File"}
+                  </Button>
+                </div>
+              </div>
               <Textarea
                 id="resume"
-                placeholder="Paste your current resume text here..."
-                className="min-h-[300px] resize-none border-slate-200 focus:ring-2 focus:ring-slate-900 transition-all"
+                placeholder="Paste your resume text here or upload a file..."
+                className="min-h-[350px] resize-none border-slate-200 focus:ring-2 focus:ring-slate-900 transition-all"
                 value={resume}
                 onChange={(e) => setResume(e.target.value)}
                 required

@@ -109,7 +109,7 @@ export default function App() {
               <div className="text-center mb-12 space-y-6">
                 <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-blue-100 shadow-sm">
                   <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                  <span className="text-sm font-semibold text-blue-600">14,000+ resumes tailored this month</span>
+                  <span className="text-sm font-semibold text-blue-600">1,000+ resumes tailored this month</span>
                 </div>
                 
                 <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900">

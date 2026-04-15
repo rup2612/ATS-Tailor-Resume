@@ -134,15 +134,12 @@ export function ResumeForm({ onSubmit, isLoading }: ResumeFormProps) {
         <CardTitle className="text-3xl font-bold tracking-tight text-slate-900">
           Tailor Your Resume
         </CardTitle>
-        <CardDescription className="text-slate-500 text-lg">
-          Create an eye catching resume in less than 10 seconds. Paste the job description and resume to get started quickly.
-        </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-3">
-              <Label htmlFor="jd" className="text-sm font-semibold uppercase tracking-wider text-slate-700">
+              <Label htmlFor="jd" className="text-sm font-semibold uppercase tracking-wider text-blue-600">
                 Job Description
               </Label>
               <Textarea
@@ -156,7 +153,7 @@ export function ResumeForm({ onSubmit, isLoading }: ResumeFormProps) {
             </div>
             <div className="space-y-3">
               <div className="flex justify-between items-center">
-                <Label htmlFor="resume" className="text-sm font-semibold uppercase tracking-wider text-slate-700">
+                <Label htmlFor="resume" className="text-sm font-semibold uppercase tracking-wider text-blue-600">
                   Current Resume
                 </Label>
                 <div className="flex gap-2">

@@ -194,7 +194,7 @@ export function ResumeForm({ onSubmit, isLoading }: ResumeFormProps) {
               />
             </div>
           </div>
-          <div className="flex justify-center gap-4 pt-4">
+          <div className="flex flex-col md:flex-row justify-center gap-4 pt-4">
             <Button 
               type="button"
               variant="outline"
@@ -202,14 +202,14 @@ export function ResumeForm({ onSubmit, isLoading }: ResumeFormProps) {
                 setJd("Software Engineer at TechCorp\n\nResponsibilities:\n- Build scalable web applications using React and TypeScript\n- Collaborate with cross-functional teams\n- Optimize application performance\n- Write clean, maintainable code");
                 setResume("John Doe\nEmail: john@example.com\nPhone: 123-456-7890\n\nSummary: Experienced developer with a focus on frontend technologies.\n\nSkills: JavaScript, HTML, CSS, React.\n\nExperience:\nWeb Developer at OldCo (2020-2023)\n- Built websites for clients.\n- Used JavaScript and CSS.");
               }}
-              className="px-6 py-6 rounded-full border-slate-200 text-slate-600 hover:bg-slate-50 transition-all"
+              className="hidden md:flex px-6 py-6 rounded-full border-slate-200 text-slate-600 hover:bg-slate-50 transition-all"
             >
               Load Sample Data
             </Button>
             <Button 
               type="submit" 
               disabled={isLoading || !jd || !resume}
-              className="px-12 py-6 text-lg font-bold rounded-full bg-slate-900 hover:bg-slate-800 text-white shadow-lg hover:shadow-xl transition-all disabled:opacity-50"
+              className="w-full md:w-auto px-12 py-6 text-lg font-bold rounded-full bg-slate-900 hover:bg-slate-800 text-white shadow-lg hover:shadow-xl transition-all disabled:opacity-50"
             >
               {isLoading ? (
                 <>

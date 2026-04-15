@@ -69,24 +69,24 @@ export default function App() {
       <Toaster position="top-center" />
       
       {/* Header */}
-      <header className="py-8 px-4 border-b border-slate-200 bg-white/80 backdrop-blur-md sticky top-0 z-50">
+      <header className="py-4 px-4 border-b border-slate-100 bg-white sticky top-0 z-50">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="bg-slate-900 p-2 rounded-xl">
-              <FileText className="h-6 w-6 text-white" />
+            <div className="bg-slate-900 p-2 rounded-lg">
+              <FileText className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-black tracking-tight text-slate-900 uppercase">ATS Tailor</h1>
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">AI Resume Optimizer</p>
+              <h1 className="text-lg font-bold tracking-tight text-slate-900 leading-none">ATS TAILOR</h1>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-1">AI RESUME OPTIMIZER</p>
             </div>
           </div>
           
           <div className="hidden md:flex items-center gap-6">
-            <div className="flex items-center gap-2 text-sm font-bold text-slate-600">
-              <CheckCircle2 className="h-4 w-4 text-green-500" />
+            <div className="flex items-center gap-2 text-sm font-medium text-slate-600">
+              <span className="h-2 w-2 rounded-full bg-emerald-500" />
               ATS Friendly
             </div>
-            <div className="flex items-center gap-2 text-sm font-bold text-slate-600">
+            <div className="flex items-center gap-2 text-sm font-medium text-slate-600">
               <Sparkles className="h-4 w-4 text-amber-500" />
               AI Powered
             </div>
@@ -94,7 +94,7 @@ export default function App() {
         </div>
       </header>
 
-      <main className="flex-1 py-12 px-4">
+      <main className="flex-1 py-12 px-4 bg-slate-50/30">
         <AnimatePresence mode="wait">
           {!tailoredResume ? (
             <motion.div
@@ -103,39 +103,45 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.4, ease: "easeOut" }}
+              className="max-w-4xl mx-auto"
             >
-              <ResumeForm onSubmit={handleTailor} isLoading={isLoading} />
-              
-              {/* Features Section */}
-              <div className="max-w-4xl mx-auto mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div className="space-y-3 p-6 rounded-2xl bg-white border border-slate-100 shadow-sm">
-                  <div className="h-10 w-10 rounded-full bg-slate-50 flex items-center justify-center">
-                    <Sparkles className="h-5 w-5 text-slate-900" />
-                  </div>
-                  <h3 className="font-bold text-slate-900">Smart Keyword Targeting</h3>
-                  <p className="text-sm text-slate-500 leading-relaxed">
-                    Our AI identifies critical keywords in the job description and weaves them naturally into your resume.
-                  </p>
+              {/* Hero Section */}
+              <div className="text-center mb-12 space-y-6">
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-blue-100 shadow-sm">
+                  <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                  <span className="text-sm font-semibold text-blue-600">14,000+ resumes tailored this month</span>
                 </div>
-                <div className="space-y-3 p-6 rounded-2xl bg-white border border-slate-100 shadow-sm">
-                  <div className="h-10 w-10 rounded-full bg-slate-50 flex items-center justify-center">
-                    <CheckCircle2 className="h-5 w-5 text-slate-900" />
+                
+                <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900">
+                  Get more interviews. <br />
+                  <span className="text-blue-600">Match your resume to any job.</span>
+                </h2>
+                
+                <p className="text-lg text-slate-500 max-w-2xl mx-auto leading-relaxed">
+                  Paste a job description and your resume — get a keyword-optimized, <br className="hidden md:block" />
+                  ATS-ready version in seconds.
+                </p>
+
+                {/* Steps */}
+                <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 pt-4 text-slate-600 font-medium">
+                  <div className="flex items-center gap-3">
+                    <span className="flex items-center justify-center h-7 w-7 rounded-full bg-blue-600 text-white text-xs font-bold">1</span>
+                    <span>Paste job description</span>
                   </div>
-                  <h3 className="font-bold text-slate-900">ATS Optimization</h3>
-                  <p className="text-sm text-slate-500 leading-relaxed">
-                    Structured formatting that ensures your resume passes through automated screening systems with ease.
-                  </p>
-                </div>
-                <div className="space-y-3 p-6 rounded-2xl bg-white border border-slate-100 shadow-sm">
-                  <div className="h-10 w-10 rounded-full bg-slate-50 flex items-center justify-center">
-                    <FileText className="h-5 w-5 text-slate-900" />
+                  <div className="hidden md:block text-slate-300">→</div>
+                  <div className="flex items-center gap-3">
+                    <span className="flex items-center justify-center h-7 w-7 rounded-full bg-blue-600 text-white text-xs font-bold">2</span>
+                    <span>Add your resume</span>
                   </div>
-                  <h3 className="font-bold text-slate-900">Instant Scoring</h3>
-                  <p className="text-sm text-slate-500 leading-relaxed">
-                    Get immediate feedback on how well your resume matches the job requirements with a 0-10 score.
-                  </p>
+                  <div className="hidden md:block text-slate-300">→</div>
+                  <div className="flex items-center gap-3">
+                    <span className="flex items-center justify-center h-7 w-7 rounded-full bg-blue-600 text-white text-xs font-bold">3</span>
+                    <span>Get tailored output</span>
+                  </div>
                 </div>
               </div>
+
+              <ResumeForm onSubmit={handleTailor} isLoading={isLoading} />
             </motion.div>
           ) : (
             <motion.div

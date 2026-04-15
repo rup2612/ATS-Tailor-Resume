@@ -79,12 +79,13 @@ export async function tailorResume(jobDescription: string, oldResume: string): P
           REQUIREMENTS:
           1. ATS FRIENDLY: Use keywords from the JD naturally.
           2. SENIORITY STEP-UP: Analyze the seniority of the JD. If it is an entry-level role, tailor the resume to position the candidate as one step ahead (e.g., Junior/Associate level). If it is an executive-level role, position them one step ahead (e.g., Senior Executive/VP level). Generally, always frame the experience to show readiness for the next level of responsibility.
-          3. PRESERVE ALL DATA: DO NOT remove any sections or information provided in the OLD RESUME. If the user has certifications, languages, awards, or any other section, you MUST include it in the tailored version.
-          4. STRUCTURE: Header (Name, Contact, Links), Summary, Skills, Work Experience, Education, Projects (if present), Certifications (if present), Languages (if present).
-          5. PROJECTS: ONLY include a projects section if the user has explicitly listed projects in their OLD RESUME.
-          6. RATING: Provide an ATS compatibility score out of 10.
-          7. FEEDBACK: Briefly explain what was changed to make it a better match and how you "stepped up" the seniority.
-          8. FORMAT: Return the response in strict JSON format.
+          3. NO PERSONAL PRONOUNS: DO NOT use personal pronouns like "I", "me", "my", "we", or "our". Use professional, action-oriented third-person phrasing (e.g., "Led a team" instead of "I led a team").
+          4. PRESERVE ALL DATA: DO NOT remove any sections or information provided in the OLD RESUME. If the user has certifications, languages, awards, or any other section, you MUST include it in the tailored version.
+          5. STRUCTURE: Header (Name, Contact, Links), Summary, Skills, Work Experience, Education, Projects (if present), Certifications (if present), Languages (if present).
+          6. PROJECTS: ONLY include a projects section if the user has explicitly listed projects in their OLD RESUME.
+          7. RATING: Provide an ATS compatibility score out of 10.
+          8. FEEDBACK: Briefly explain what was changed to make it a better match and how you "stepped up" the seniority.
+          9. FORMAT: Return the response in strict JSON format.
           
           JOB DESCRIPTION:
           ${jobDescription}

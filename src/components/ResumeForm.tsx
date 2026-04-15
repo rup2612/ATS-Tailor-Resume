@@ -135,7 +135,7 @@ export function ResumeForm({ onSubmit, isLoading }: ResumeFormProps) {
           Tailor Your Resume
         </CardTitle>
         <CardDescription className="text-slate-500 text-lg">
-          Upload your resume or paste the text to get started.
+          Create an eye catching resume in less than 10 seconds. Paste the job description and resume to get started quickly.
         </CardDescription>
       </CardHeader>
       <CardContent>

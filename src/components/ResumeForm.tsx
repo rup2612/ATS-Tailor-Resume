@@ -23,8 +23,25 @@ export function ResumeForm({ onSubmit, isLoading }: ResumeFormProps) {
   const [isParsing, setIsParsing] = React.useState(false);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
+  const MIN_CHARS = 100;
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (jd.length < MIN_CHARS) {
+      toast.error("Job description is too short", {
+        description: `Please provide at least ${MIN_CHARS} characters for a better tailoring experience.`
+      });
+      return;
+    }
+
+    if (resume.length < MIN_CHARS) {
+      toast.error("Resume content is too short", {
+        description: `Please provide at least ${MIN_CHARS} characters so we have enough context to tailor.`
+      });
+      return;
+    }
+
     if (jd && resume) {
       onSubmit(jd, resume);
     }
@@ -145,11 +162,16 @@ export function ResumeForm({ onSubmit, isLoading }: ResumeFormProps) {
               <Textarea
                 id="jd"
                 placeholder="Paste the job description here..."
-                className="min-h-[350px] resize-none border-slate-200 focus:ring-2 focus:ring-slate-900 transition-all"
+                className="min-h-[350px] resize-none border-slate-200 focus:ring-2 focus:ring-slate-900 transition-all font-sans text-sm"
                 value={jd}
                 onChange={(e) => setJd(e.target.value)}
                 required
               />
+              <div className="flex justify-end pt-1">
+                <span className={`text-[10px] font-bold uppercase tracking-widest ${jd.length < MIN_CHARS ? 'text-slate-400' : 'text-emerald-500'}`}>
+                  {jd.length} / {MIN_CHARS} characters
+                </span>
+              </div>
             </div>
             <div className="space-y-3">
               <div className="flex justify-between items-center">
@@ -184,17 +206,22 @@ export function ResumeForm({ onSubmit, isLoading }: ResumeFormProps) {
               <Textarea
                 id="resume"
                 placeholder="Paste your resume text here or upload a file..."
-                className="min-h-[350px] resize-none border-slate-200 focus:ring-2 focus:ring-slate-900 transition-all"
+                className="min-h-[350px] resize-none border-slate-200 focus:ring-2 focus:ring-slate-900 transition-all font-sans text-sm"
                 value={resume}
                 onChange={(e) => setResume(e.target.value)}
                 required
               />
+              <div className="flex justify-end pt-1">
+                <span className={`text-[10px] font-bold uppercase tracking-widest ${resume.length < MIN_CHARS ? 'text-slate-400' : 'text-emerald-500'}`}>
+                  {resume.length} / {MIN_CHARS} characters
+                </span>
+              </div>
             </div>
           </div>
           <div className="flex flex-col md:flex-row justify-center gap-4 pt-4">
             <Button 
               type="submit" 
-              disabled={isLoading || !jd || !resume}
+              disabled={isLoading || !jd.trim() || !resume.trim() || isParsing}
               className="w-full md:w-auto px-12 py-6 text-lg font-bold rounded-full bg-slate-900 hover:bg-slate-800 text-white shadow-lg hover:shadow-xl transition-all disabled:opacity-50"
             >
               {isLoading ? (

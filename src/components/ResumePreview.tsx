@@ -149,7 +149,7 @@ export function ResumePreview({ data, onBack }: ResumePreviewProps) {
                 <div className="flex flex-wrap gap-2">
                   {skills.map((skill, i) => (
                     <span key={i} className="text-slate-700 text-[14px] font-medium">
-                      {skill}{i < skills.length - 1 ? " • " : ""}
+                      {skill}{i < skills.length - 1 ? ", " : ""}
                     </span>
                   ))}
                 </div>
@@ -249,7 +249,7 @@ export function ResumePreview({ data, onBack }: ResumePreviewProps) {
                   <div className="flex flex-wrap gap-2">
                     {data.languages.map((lang, i) => (
                       <span key={i} className="text-slate-700 text-[14px] font-medium">
-                        {lang}{i < data.languages.length - 1 ? " • " : ""}
+                        {lang}{i < data.languages.length - 1 ? ", " : ""}
                       </span>
                     ))}
                   </div>

@@ -176,7 +176,7 @@ export async function exportToDocx(data: ResumeData) {
                 }),
                 new Paragraph({
                   spacing: { before: 100 },
-                  children: [new TextRun({ text: data.languages.join(" • "), size: 22 })],
+                  children: [new TextRun({ text: data.languages.join(", "), size: 22 })],
                 }),
               ]
             : []),

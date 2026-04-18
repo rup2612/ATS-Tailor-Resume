@@ -260,43 +260,49 @@ export function ResumePreview({ data, onBack }: ResumePreviewProps) {
         </div>
       </motion.div>
 
-      {/* Sticky Footer for Actions */}
-      <div className="fixed bottom-8 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
-        <motion.div 
-          initial={{ y: 100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.5, type: "spring", stiffness: 260, damping: 20 }}
-          className="bg-white/90 backdrop-blur-xl border border-slate-200 shadow-2xl rounded-full px-8 py-3 flex items-center gap-8 pointer-events-auto"
+      {/* Export Actions Section */}
+      <div className="flex flex-col items-center gap-4 py-8 mt-12 border-t border-slate-100">
+        <h3 className="text-sm font-bold uppercase tracking-widest text-slate-400">Download Your Personalized Resume</h3>
+        <div className="flex flex-wrap justify-center gap-4">
+          <Button 
+            variant="outline" 
+            onClick={handleDownloadDocx} 
+            className="rounded-full px-8 h-12 font-bold text-slate-600 hover:text-slate-900 border-slate-200"
+          >
+            <FileText className="mr-2 h-5 w-5" />
+            Download Word (.docx)
+          </Button>
+          <Button 
+            onClick={handleDownloadPdf}
+            disabled={isExportingPdf}
+            className="bg-slate-900 text-white rounded-full px-10 h-12 font-bold shadow-lg shadow-slate-200 hover:bg-slate-800 transition-all"
+          >
+            {isExportingPdf ? (
+              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+            ) : (
+              <Download className="mr-2 h-5 w-5" />
+            )}
+            {isExportingPdf ? "Generating PDF..." : "Download PDF (.pdf)"}
+          </Button>
+        </div>
+      </div>
+
+      {/* Talk to a Human Section */}
+      <div className="flex flex-col items-center gap-6 py-16 border-t border-slate-100">
+        <div className="space-y-2 text-center">
+          <h3 className="text-2xl font-bold text-slate-900">Need expert guidance?</h3>
+          <p className="text-slate-500 max-w-md mx-auto">
+            Book a 1:1 session with a career expert to review your optimized resume and improve your interview chances.
+          </p>
+        </div>
+        <Button 
+          size="lg"
+          onClick={() => window.open("https://topmate.io/dashboard/profile", "_blank")}
+          className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full px-12 h-16 text-xl font-bold shadow-2xl hover:shadow-emerald-200/50 transition-all transform hover:scale-105 active:scale-95 group"
         >
-          <div className="flex items-center gap-3 pr-8 border-r border-slate-100">
-            <div className="flex flex-col">
-              <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">ATS Compatibility</span>
-              <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-black text-slate-900">{atsScore}</span>
-                <span className="text-slate-400 text-xs font-bold">/10</span>
-              </div>
-            </div>
-          </div>
-          
-          <div className="flex gap-3">
-            <Button variant="outline" onClick={handleDownloadDocx} className="rounded-full px-6 border-slate-200 h-11 font-bold text-slate-600 hover:text-slate-900">
-              <FileText className="mr-2 h-4 w-4" />
-              Word (.docx)
-            </Button>
-            <Button 
-              onClick={handleDownloadPdf}
-              disabled={isExportingPdf}
-              className="bg-slate-900 text-white rounded-full px-8 h-11 font-bold shadow-lg shadow-slate-200 hover:bg-slate-800 transition-all"
-            >
-              {isExportingPdf ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <Download className="mr-2 h-4 w-4" />
-              )}
-              {isExportingPdf ? "Exporting..." : "Download PDF"}
-            </Button>
-          </div>
-        </motion.div>
+          Talk to a human
+          <ExternalLink className="ml-3 h-6 w-6 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+        </Button>
       </div>
     </div>
   );

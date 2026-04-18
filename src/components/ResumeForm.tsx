@@ -167,11 +167,6 @@ export function ResumeForm({ onSubmit, isLoading }: ResumeFormProps) {
                 onChange={(e) => setJd(e.target.value)}
                 required
               />
-              <div className="flex justify-end pt-1">
-                <span className={`text-[10px] font-bold uppercase tracking-widest ${jd.length < MIN_CHARS ? 'text-slate-400' : 'text-emerald-500'}`}>
-                  {jd.length} / {MIN_CHARS} characters
-                </span>
-              </div>
             </div>
             <div className="space-y-3">
               <div className="flex justify-between items-center">
@@ -188,11 +183,10 @@ export function ResumeForm({ onSubmit, isLoading }: ResumeFormProps) {
                   />
                   <Button
                     type="button"
-                    variant="outline"
                     size="sm"
                     disabled={isParsing}
                     onClick={() => fileInputRef.current?.click()}
-                    className="h-8 rounded-full border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-50"
+                    className="h-8 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white border-none text-xs font-bold transition-all shadow-sm"
                   >
                     {isParsing ? (
                       <Loader2 className="mr-1.5 h-3 w-3 animate-spin" />
@@ -211,11 +205,6 @@ export function ResumeForm({ onSubmit, isLoading }: ResumeFormProps) {
                 onChange={(e) => setResume(e.target.value)}
                 required
               />
-              <div className="flex justify-end pt-1">
-                <span className={`text-[10px] font-bold uppercase tracking-widest ${resume.length < MIN_CHARS ? 'text-slate-400' : 'text-emerald-500'}`}>
-                  {resume.length} / {MIN_CHARS} characters
-                </span>
-              </div>
             </div>
           </div>
           <div className="flex flex-col md:flex-row justify-center gap-4 pt-4">

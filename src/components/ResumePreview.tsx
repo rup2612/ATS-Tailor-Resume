@@ -291,8 +291,8 @@ export function ResumePreview({ data, onBack }: ResumePreviewProps) {
       <div className="flex flex-col items-center gap-6 py-16 border-t border-slate-100">
         <div className="space-y-2 text-center">
           <h3 className="text-2xl font-bold text-slate-900">Need expert guidance?</h3>
-          <p className="text-slate-500 max-w-md mx-auto">
-            Book a 1:1 session with a career expert to review your optimized resume and improve your interview chances.
+          <p className="text-slate-500 max-w-md mx-auto italic">
+            "Your resume isn’t the problem. Your positioning is. Let’s fix it."
           </p>
         </div>
         <Button 

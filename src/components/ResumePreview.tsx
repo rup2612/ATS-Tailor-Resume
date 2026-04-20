@@ -300,7 +300,7 @@ export function ResumePreview({ data, onBack }: ResumePreviewProps) {
           onClick={() => window.open("https://topmate.io/dashboard/profile", "_blank")}
           className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full px-12 h-16 text-xl font-bold shadow-2xl hover:shadow-emerald-200/50 transition-all transform hover:scale-105 active:scale-95 group"
         >
-          Talk to a human
+          Get Expert Feedback
           <ExternalLink className="ml-3 h-6 w-6 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
         </Button>
       </div>

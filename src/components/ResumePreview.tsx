@@ -11,6 +11,7 @@ import { FileText } from "lucide-react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { toast } from "sonner";
+import { track } from "@vercel/analytics";
 
 interface ResumePreviewProps {
   data: ResumeData;
@@ -24,6 +25,7 @@ export function ResumePreview({ data, onBack }: ResumePreviewProps) {
 
   const handleDownloadDocx = async () => {
     try {
+      track('download_docx', { name: personalInfo.name });
       await exportToDocx(data);
     } catch (error) {
       console.error("Error exporting to DOCX:", error);
@@ -38,6 +40,7 @@ export function ResumePreview({ data, onBack }: ResumePreviewProps) {
     
     setIsExportingPdf(true);
     try {
+      track('download_pdf', { name: personalInfo.name });
       // Small delay to ensure any animations are settled
       await new Promise(resolve => setTimeout(resolve, 300));
 
@@ -297,7 +300,10 @@ export function ResumePreview({ data, onBack }: ResumePreviewProps) {
         </div>
         <Button 
           size="lg"
-          onClick={() => window.open("https://topmate.io/dashboard/profile", "_blank")}
+          onClick={() => {
+            track('expert_feedback_click');
+            window.open("https://topmate.io/dashboard/profile", "_blank");
+          }}
           className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full px-12 h-16 text-xl font-bold shadow-2xl hover:shadow-emerald-200/50 transition-all transform hover:scale-105 active:scale-95 group"
         >
           Get Expert Feedback

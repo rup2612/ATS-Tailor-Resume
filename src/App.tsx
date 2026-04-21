@@ -11,6 +11,9 @@ import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "motion/react";
 import { Sparkles, FileText, CheckCircle2 } from "lucide-react";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
+import { track } from "@vercel/analytics";
 
 export default function App() {
   const [isLoading, setIsLoading] = React.useState(false);
@@ -34,6 +37,17 @@ export default function App() {
 
     setIsLoading(true);
     console.log("[App] Starting resume tailoring...");
+    
+    // Track the click in Vercel Analytics
+    try {
+      track('generate_tailored_resume', {
+        jdLength: jd.length,
+        resumeLength: resume.length
+      });
+    } catch (e) {
+      console.warn("Analytics tracking failed", e);
+    }
+
     try {
       const data = await tailorResume(jd, resume);
       console.log("[App] Tailoring successful:", data);
@@ -173,6 +187,8 @@ export default function App() {
           </div>
         </div>
       </footer>
+      <Analytics />
+      <SpeedInsights />
     </div>
   );
 }

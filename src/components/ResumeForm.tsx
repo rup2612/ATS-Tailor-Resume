@@ -9,7 +9,7 @@ import * as mammoth from "mammoth";
 import * as pdfjs from "pdfjs-dist";
 
 // Set up PDF.js worker - using a more reliable CDN link
-const PDFJS_VERSION = '4.0.379';
+const PDFJS_VERSION = '5.6.205';
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${PDFJS_VERSION}/pdf.worker.min.mjs`;
 
 interface ResumeFormProps {

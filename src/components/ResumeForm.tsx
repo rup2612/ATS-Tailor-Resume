@@ -8,9 +8,9 @@ import { toast } from "sonner";
 import * as mammoth from "mammoth";
 import * as pdfjs from "pdfjs-dist";
 
-// Set up PDF.js worker - using a more reliable CDN link
+// Set up PDF.js worker - using unpkg which mirrors npm exactly to avoid cdnjs delays
 const PDFJS_VERSION = '5.6.205';
-pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${PDFJS_VERSION}/pdf.worker.min.mjs`;
+pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${PDFJS_VERSION}/build/pdf.worker.min.mjs`;
 
 interface ResumeFormProps {
   onSubmit: (jd: string, resume: string) => void;
